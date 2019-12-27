@@ -1,0 +1,39 @@
+server:
+  port: 40005
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://106.52.181.161:3306/blog?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
+    username: root
+    password: 123456Abcd
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 15
+      auto-commit: true
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: realm
+          uri: lb://cloud-security
+          predicates:
+            - Path=/oauth/**
+          filters:
+            - AddRequestHeader=gateway-request,true
+            - AddRequestParameter=response_type,code
+            - AddRequestParameter=client_id,oauth2
+            - AddRequestParameter=redirect_uri,https://www.baidu.com
+            - AddRequestParameter=scope,all
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml
+  type-aliases-package: com.gateway.dao
+eureka:
+  instance:
+    hostname: cloud-gateway
+  client:
+    service-url:
+      defaultZone: http://106.52.181.161:40000/eureka/

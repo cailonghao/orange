@@ -1,0 +1,51 @@
+server:
+  port: 40007
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:orange-mysql://orange-mysql:3306/blog?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
+    username: root
+    password: 123456Abcd
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 15
+      auto-commit: true
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: realm
+          uri: https://www.jianshu.com
+          predicates:
+            - Path=/login
+          filters:
+            - AddRequestHeader=gateway-request,true
+            - AddRequestParameter=response_type,code
+            - AddRequestParameter=client_id,oauth2
+            - AddRequestParameter=redirect_uri,https://www.baidu.com
+            - AddRequestParameter=scope,all
+        - id: realm
+          uri: lb://orange-security
+          predicates:
+            - Path=/oauth/authorize
+          filters:
+            - AddRequestHeader=gateway-request,true
+            - AddRequestParameter=response_type,code
+            - AddRequestParameter=client_id,oauth2
+            - AddRequestParameter=redirect_uri,https://www.baidu.com
+            - AddRequestParameter=scope,all
+  application:
+    name: orange-gateway
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml
+  type-aliases-package: com.gateway.pojo
+eureka:
+  instance:
+    hostname: orange-gateway
+  client:
+    service-url:
+      defaultZone: http://orange-server:40000/eureka/

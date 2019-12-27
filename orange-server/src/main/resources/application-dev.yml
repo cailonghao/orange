@@ -1,0 +1,13 @@
+server:
+  port: 40000
+spring:
+  application:
+    name: orange-server
+eureka:
+  instance:
+    hostname: orange-server
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://localhost:40000/eureka/
