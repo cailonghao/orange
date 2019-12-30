@@ -1,0 +1,28 @@
+server:
+  port: 40009
+
+spring:
+  application:
+    name: orange-provider
+  datasource:
+    username: root
+    password: 123456Abcd
+    url: jdbc:mysql://orange-mysql:3306/blog?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 15
+      auto-commit: true
+eureka:
+  instance:
+    hostname: orange-provider
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://orange-server:40000/eureka/
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml
+  type-aliases-package: com.provider.pojo
+
