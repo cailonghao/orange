@@ -1,0 +1,21 @@
+server:
+  port: 40010
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http:193.112.143.164:40008/oauth/token_key
+          public-key-location: publickey.cer
+        opaquetoken:
+          client-id: oauth2
+          client-secret: 123456
+eureka:
+  instance:
+    hostname: orange-security
+    prefer-ip-address: true
+    ip-address: 193.112.143.164
+  client:
+    fetch-registry: true
+    service-url:
+      defaultZone: http://193.112.143.164:40000/eureka/
